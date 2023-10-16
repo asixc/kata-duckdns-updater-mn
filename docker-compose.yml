@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: duckdns-updater-db
+    environment:
+      MYSQL_ROOT_PASSWORD: superRootLocalPassword
+      MYSQL_DATABASE: duckdns-updater
+      MYSQL_USER: duckdns-updater
+      MYSQL_PASSWORD: duckdns-superPassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./datos-mariadb:/var/lib/mysql
+

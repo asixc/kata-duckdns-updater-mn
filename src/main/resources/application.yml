@@ -1,0 +1,29 @@
+#Sat Oct 14 22:23:25 GMT 2023
+micronaut:
+  application:
+  name: duckdns-updater
+  data:
+    repositories:
+      default:
+        packages-to-scan:
+          - "dev.jotxee.repository"
+duckdns:
+  token: ${DUCKDNS_TOKEN}
+
+datasources:
+  default:
+    url: jdbc:mariadb://127.0.0.1:3306/duckdns-updater
+    username: duckdns-updater
+    password: 'duckdns-superPassword'
+    driver-class-name: org.mariadb.jdbc.Driver
+    schema-generate: true
+    dialect: MYSQL
+jpa:
+  default:
+    packages-to-scan:
+      - "dev.jotxee.repository"
+    properties:
+      hibernate:
+        show_sql: false
+        hbm2ddl:
+          auto: update
