@@ -27,9 +27,7 @@ public class IPEntity implements Serializable {
         this.instant = instant;
     }
 
-    public IPEntity() {
-
-    }
+    public IPEntity() { }
 
     public void setId(Long id) {
         this.id = id;

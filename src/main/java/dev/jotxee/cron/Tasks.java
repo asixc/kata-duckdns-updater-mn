@@ -17,11 +17,11 @@ public class Tasks {
         this.duckDnsUpdater = duckDnsUpdater;
     }
 
-    @Scheduled(cron = "0/1 * * * * ")
+    @Scheduled(cron = "0/5 * * * * ")
     void execute() {
         final LocalDateTime instant = LocalDateTime.now();
         final DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/M/yyyy hh:mm:ss");
-        LOG.info("Starting call to Duckdns.org: {}", instant.format(format));
+        LOG.debug("Starting call to Duckdns.org: {}", instant.format(format));
         duckDnsUpdater.update(instant);
     }
 }
