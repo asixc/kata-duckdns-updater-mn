@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class DuckDnsUpdater {
     private static final Logger LOG = LoggerFactory.getLogger(DuckDnsUpdater.class);
     private static final String DUCK_DNS_URL = "https://www.duckdns.org/update?domains=vpn-jotxee&token=";
     private static final OkHttpClient client = new OkHttpClient();
+    public static final int SECONDS_IN_ONE_HOUR = 3600;
 
     @Value("${duckdns.token}")
     private String token;
@@ -37,7 +39,9 @@ public class DuckDnsUpdater {
             final String publicIP = getPublicIP();
             final Optional<IPEntity> lastRecord = repository.findLastRecord();
 
-            if (lastRecord.isPresent() && lastRecord.get().getIp().equals(publicIP)) {
+            if (lastRecord.isPresent() &&
+                    (lastRecord.get().getIp().equals(publicIP) || !moreThanAnHourHasPassed(instant, lastRecord)
+                )) {
                 LOG.debug("La última ip publicada [{}] sigue siendo la misma [{}]", lastRecord.get().getIp(), publicIP);
                 return;
             }
@@ -65,6 +69,11 @@ public class DuckDnsUpdater {
             e.printStackTrace();
         }
     }
+
+    private boolean moreThanAnHourHasPassed(LocalDateTime instant, Optional<IPEntity> lastRecord ) {
+        return Duration.between(instant, lastRecord.get().getInstant()).getSeconds() > SECONDS_IN_ONE_HOUR;
+    }
+
 
     private String getPublicIP() {
         // Crear una solicitud GET con la URL
